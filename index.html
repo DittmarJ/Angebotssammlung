@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angebotsmanager</title>
+    <style>
+        :root {
+            --primary-color: #0078d7;
+            --background-color: #f5f5f5;
+            --card-color: #ffffff;
+            --text-color: #333333;
+            --border-color: #dddddd;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 0;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            margin: 0;
+            padding: 0 20px;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            border-bottom: none;
+            margin-right: 5px;
+            background-color: var(--background-color);
+            border-radius: 5px 5px 0 0;
+        }
+        
+        .tab.active {
+            background-color: var(--card-color);
+            border-color: var(--border-color);
+            border-bottom: 1px solid var(--card-color);
+            margin-bottom: -1px;
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+            background-color: var(--card-color);
+            padding: 20px;
+            border-radius: 0 5px 5px 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        input[type="text"], 
+        textarea, 
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #005fa3;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 500;
+        }
+        
+        tr:hover {
+            background-color: rgba(0, 120, 215, 0.05);
+        }
+        
+        .details-panel {
+            background-color: var(--card-color);
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        
+        .details-panel h3 {
+            margin-top: 0;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+        
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .alert-success {
+            background-color: #dff0d8;
+            color: #3c763d;
+            border: 1px solid #d6e9c6;
+        }
+        
+        .alert-error {
+            background-color: #f2dede;
+            color: #a94442;
+            border: 1px solid #ebccd1;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Angebotsmanager</h1>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" onclick="openTab('new-offer')">Neues Angebot</div>
+            <div class="tab" onclick="openTab('overview')">Angebotsübersicht</div>
+        </div>
+        
+        <div id="alert-box"></div>
+        
+        <div id="new-offer" class="tab-content active">
+            <h2>Neues Angebot erstellen</h2>
+            <form id="offer-form">
+                <div class="form-group">
+                    <label for="offer-name">Angebotsname:</label>
+                    <input type="text" id="offer-name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="offer-desc">Kurze Beschreibung:</label>
+                    <input type="text" id="offer-desc" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="offer-guide">Lange Anleitung:</label>
+                    <textarea id="offer-guide" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="offer-season">Ferienauswahl:</label>
+                    <select id="offer-season" required>
+                        <option value="">-- Bitte auswählen --</option>
+                        <option value="Fasnacht">Fasnacht</option>
+                        <option value="Ostern">Ostern</option>
+                        <option value="Pfingsten">Pfingsten</option>
+                        <option value="Sommer">Sommer</option>
+                        <option value="Herbst">Herbst</option>
+                    </select>
+                </div>
+                
+                <button type="submit">Angebot speichern</button>
+            </form>
+        </div>
+        
+        <div id="overview" class="tab-content">
+            <h2>Angebotsübersicht</h2>
+            
+            <table id="offers-table">
+                <thead>
+                    <tr>
+                        <th>Angebotsname</th>
+                        <th>Beschreibung</th>
+                        <th>Ferien</th>
+                        <th>Erstellt am</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Angebote werden hier eingefügt -->
+                </tbody>
+            </table>
+            
+            <div class="details-panel">
+                <h3>Anleitungsdetails</h3>
+                <div id="offer-details"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Angebote-Array (simuliert eine Datenbank)
+        let offers = [
+            {
+                name: "Osterbasteln",
+                description: "Bastelideen für Ostern",
+                guide: "1. Materialien besorgen\n2. Vorlagen ausschneiden\n3. Zusammenbauen\n4. Dekorieren",
+                season: "Ostern",
+                createdAt: new Date().toLocaleString()
+            },
+            {
+                name: "Sommercamp",
+                description: "Aktivitäten für Sommerferien",
+                guide: "Tagesplan:\n- 09:00 Frühstück\n- 10:00 Wanderung\n- 12:00 Mittagessen\n- 14:00 Bastelzeit\n- 16:00 Freizeit",
+                season: "Sommer",
+                createdAt: new Date().toLocaleString()
+            }
+        ];
+
+        // Tab-Funktionalität
+        function openTab(tabId) {
+            // Tab-Buttons
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            event.currentTarget.classList.add('active');
+            
+            // Tab-Inhalte
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // Formularverarbeitung
+        document.getElementById('offer-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('offer-name').value.trim();
+            const description = document.getElementById('offer-desc').value.trim();
+            const guide = document.getElementById('offer-guide').value.trim();
+            const season = document.getElementById('offer-season').value;
+            
+            // Validierung
+            if (!name || !description || !guide || !season) {
+                showAlert('Bitte füllen Sie alle Felder aus!', 'error');
+                return;
+            }
+            
+            // Neues Angebot erstellen
+            const newOffer = {
+                name,
+                description,
+                guide,
+                season,
+                createdAt: new Date().toLocaleString()
+            };
+            
+            // Zum Array hinzufügen
+            offers.push(newOffer);
+            
+            // Formular zurücksetzen
+            this.reset();
+            
+            // Erfolgsmeldung anzeigen
+            showAlert('Angebot wurde erfolgreich gespeichert!', 'success');
+            
+            // Übersicht aktualisieren
+            updateOverview();
+            
+            // Zur Übersicht wechseln
+            document.querySelector('.tab:nth-child(2)').click();
+        });
+
+        // Übersicht aktualisieren
+        function updateOverview() {
+            const tbody = document.querySelector('#offers-table tbody');
+            tbody.innerHTML = '';
+            
+            // Angebote sortieren (neueste zuerst)
+            const sortedOffers = [...offers].sort((a, b) => 
+                new Date(b.createdAt) - new Date(a.createdAt));
+            
+            // Angebote zur Tabelle hinzufügen
+            sortedOffers.forEach(offer => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${offer.name}</td>
+                    <td>${offer.description}</td>
+                    <td>${offer.season}</td>
+                    <td>${offer.createdAt}</td>
+                `;
+                
+                // Klick-Event für Zeile
+                row.addEventListener('click', () => showOfferDetails(offer));
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        // Angebotsdetails anzeigen
+        function showOfferDetails(offer) {
+            const detailsDiv = document.getElementById('offer-details');
+            detailsDiv.innerHTML = `
+                <h4>${offer.name}</h4>
+                <p><strong>Ferien:</strong> ${offer.season}</p>
+                <p><strong>Erstellt am:</strong> ${offer.createdAt}</p>
+                <h5>Anleitung:</h5>
+                <pre>${offer.guide}</pre>
+            `;
+        }
+
+        // Alert anzeigen
+        function showAlert(message, type) {
+            const alertBox = document.getElementById('alert-box');
+            alertBox.innerHTML = `
+                <div class="alert alert-${type}">${message}</div>
+            `;
+            
+            alertBox.style.display = 'block';
+            
+            // Nach 5 Sekenden ausblenden
+            setTimeout(() => {
+                alertBox.style.display = 'none';
+            }, 5000);
+        }
+
+        // Initialisierung
+        document.addEventListener('DOMContentLoaded', function() {
+            updateOverview();
+            
+            // Beim Start erstes Angebot anzeigen (falls vorhanden)
+            if (offers.length > 0) {
+                showOfferDetails(offers[0]);
+            }
+        });
+    </script>
+</body>
+</html>
